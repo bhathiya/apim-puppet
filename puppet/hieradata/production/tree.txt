@@ -1,0 +1,89 @@
+.
+├── common.yaml
+├── node
+│   └── dev-sandbox.local.dev.wso2.org.yaml
+├── osfamily
+│   ├── RedHat-pkgs.yaml
+│   ├── RedHat-repos.yaml
+│   └── RedHat.yaml
+├── tree.txt
+├── vm_type
+│   ├── docker.yaml
+│   └── vagrant.yaml
+└── wso2
+    ├── common.yaml
+    ├── wso2am
+    │   ├── 1.10.0
+    │   │   └── default.yaml
+    │   └── 1.9.1
+    │       ├── api-key-manager.yaml
+    │       ├── api-publisher.yaml
+    │       ├── api-store.yaml
+    │       ├── default.yaml
+    │       └── gateway-manager.yaml
+    ├── wso2as
+    │   └── 5.3.0
+    │       ├── default.yaml
+    │       ├── manager.yaml
+    │       └── worker.yaml
+    ├── wso2bps
+    │   └── 3.5.0
+    │       ├── default.yaml
+    │       ├── manager.yaml
+    │       └── worker.yaml
+    ├── wso2brs
+    │   ├── 2.1.0
+    │   │   ├── default.yaml
+    │   │   ├── manager.yaml
+    │   │   └── worker.yaml
+    │   └── 2.2.0
+    │       ├── default.yaml
+    │       ├── manager.yaml
+    │       └── worker.yaml
+    ├── wso2cep
+    │   └── 4.0.0
+    │       ├── default.yaml
+    │       ├── presenter.yaml
+    │       └── worker.yaml
+    ├── wso2das
+    │   └── 3.0.0
+    │       └── default.yaml
+    ├── wso2dss
+    │   └── 3.5.0
+    │       ├── default.yaml
+    │       ├── manager.yaml
+    │       └── worker.yaml
+    ├── wso2es
+    │   └── 2.0.0
+    │       ├── default.yaml
+    │       ├── manager.yaml
+    │       ├── publisher.yaml
+    │       ├── store.yaml
+    │       └── worker.yaml
+    ├── wso2esb
+    │   └── 4.9.0
+    │       ├── default.yaml
+    │       ├── manager.yaml
+    │       └── worker.yaml
+    ├── wso2greg
+    │   ├── 4.6.0
+    │   │   └── default.yaml
+    │   └── 5.1.0
+    │       └── default.yaml
+    ├── wso2is
+    │   ├── 5.0.0
+    │   │   └── default.yaml
+    │   └── 5.1.0
+    │       └── default.yaml
+    ├── wso2mb
+    │   ├── 3.0.0
+    │   │   └── default.yaml
+    │   └── 3.1.0
+    │       └── default.yaml
+    └── wso2ppaas
+        ├── 4.1.0
+        │   └── default.yaml
+        └── 4.1.1
+            └── default.yaml
+
+36 directories, 50 files
