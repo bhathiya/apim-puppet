@@ -1,9 +1,9 @@
-drop database AM_DB;
-drop database GOV_REG_DB;
-drop database CONFIG_REG_DB;
-drop database UM_DB;
-drop database WSO2MB_DB;
-drop database WSO2Throttle_DB;
+drop database if exists AM_DB;
+drop database if exists GOV_REG_DB;
+drop database if exists CONFIG_REG_DB;
+drop database if exists UM_DB;
+drop database if exists WSO2MB_DB;
+drop database if exists WSO2Throttle_DB;
 create database UM_DB;
 create database AM_DB;
 create database GOV_REG_DB;
