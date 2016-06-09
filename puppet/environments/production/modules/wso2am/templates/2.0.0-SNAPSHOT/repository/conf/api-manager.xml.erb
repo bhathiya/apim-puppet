@@ -276,7 +276,6 @@
              gateway https( /http, we recommend users to use 'https' endpoints for security purpose) url.
              Also please note that we should point gateway revoke service to key manager -->
         <RevokeAPIURL>https://<%= @gateway_subdomain %>.<%= @am_subdomain %>.<%= @domain %>:<%= @am_nio_https_port %>/revoke</RevokeAPIURL>
-
         <!-- Whether to encrypt tokens when storing in the Database
         Note: If changing this value to true, change the value of <TokenPersistenceProcessor> to
         org.wso2.carbon.identity.oauth.tokenprocessor.EncryptionDecryptionPersistenceProcessor in the identity.xml -->
@@ -322,6 +321,9 @@
         <!-- This parameter specifies whether to display the ratings  or not.
              Default is "true". If user wants to disable, he must set this param as "false" -->
         <DisplayRatings>true</DisplayRatings>
+
+        <!--set isStoreForumEnabled to false for disable forum in store-->
+        <!--isStoreForumEnabled>false</isStoreForumEnabled-->
     </APIStore>
 
     <APIPublisher>
@@ -415,6 +417,14 @@
         <!--Configure white-listed URIs of REST API. Accessing white-listed URIs does not require credentials (does not require Authorization header). -->
         <WhiteListedURIs>
             <WhiteListedURI>
+                <URI>/api/am/publisher/{version}/swagger.json</URI>
+                <HTTPMethods>GET,HEAD</HTTPMethods>
+            </WhiteListedURI>
+            <WhiteListedURI>
+                <URI>/api/am/store/{version}/swagger.json</URI>
+                <HTTPMethods>GET,HEAD</HTTPMethods>
+            </WhiteListedURI>
+            <WhiteListedURI>
                 <URI>/api/am/store/{version}/apis</URI>
                 <HTTPMethods>GET,HEAD</HTTPMethods>
             </WhiteListedURI>
@@ -453,8 +463,9 @@
         </WhiteListedURIs>
     </RESTAPI>
     <ThrottlingConfigurations>
-        <EnableAdvanceThrottling>false</EnableAdvanceThrottling>
+        <EnableAdvanceThrottling>true</EnableAdvanceThrottling>
         <DataPublisher>
+            <Enabled>true</Enabled>
             <Type>Binary</Type>
             <ReceiverUrlGroup>tcp://${carbon.local.ip}:${receiver.url.port}</ReceiverUrlGroup>
             <AuthUrlGroup>ssl://${carbon.local.ip}:${auth.url.port}</AuthUrlGroup>
@@ -476,22 +487,15 @@
             <Password>${admin.password}</Password>
         </PolicyDeployer>
         <BlockCondition>
-            <ServiceURL>http://${carbon.local.ip}:${mgt.transport.http.port}/throttle/data/v1</ServiceURL>
-            <Username>${admin.username}</Username>
-            <Password>${admin.password}</Password>
+            <Enabled>true</Enabled>
             <!--InitDelay>300000</InitDelay>
             <Period>3600000</Period-->
         </BlockCondition>
-        <GlobalPolicyEngineWSConnectionDetails>
-            <ServiceURL>http://${carbon.local.ip}:${mgt.transport.http.port}/throttle/data/v1</ServiceURL>
+        <JMSConnectionDetails>
+            <Enabled>true</Enabled>
+            <ServiceURL>tcp://${carbon.local.ip}:${jms.port}</ServiceURL>
             <Username>${admin.username}</Username>
             <Password>${admin.password}</Password>
-            <!--InitDelay>300000</InitDelay-->
-        </GlobalPolicyEngineWSConnectionDetails>
-        <JMSConnectionDetails>
-            <ServiceURL>tcp://127.0.0.1:52556</ServiceURL>
-            <Username>admin</Username>
-            <Password>admin</Password>
             <Destination>throttleData</Destination>
             <!--InitDelay>300000</InitDelay-->
             <JMSConnectionParameters>
@@ -507,8 +511,29 @@
                 <JobQueueSize>10</JobQueueSize>
             </JMSTaskManager>
         </JMSConnectionDetails>
+        <JMSEventPublisherName>jmsEventPublisher</JMSEventPublisherName>
+        <!--DefaultLimits>
+            <SubscriptionTierLimits>
+                <Gold>5000</Gold>
+                <Silver>2000</Silver>
+                <Bronze>1000</Bronze>
+                <Unauthenticated>60</Unauthenticated>
+            </SubscriptionTierLimits>
+            <ApplicationTierLimits>
+                <50PerMin>50</50PerMin>
+                <20PerMin>20</20PerMin>
+                <10PerMin>10</10PerMin>
+            </ApplicationTierLimits>
+            <ResourceLevelTierLimits>
+                <50KPerMin>50000</50KPerMin>
+                <20KPerMin>20000</20KPerMin>
+                <10KPerMin>10000</10KPerMin>
+            </ResourceLevelTierLimits>
+        </DefaultLimits-->
         <EnableUnlimitedTier>true</EnableUnlimitedTier>
-        <EnableSubscriptionSpikeArrest>false</EnableSubscriptionSpikeArrest>
+        <EnableHeaderConditions>false</EnableHeaderConditions>
+        <EnableJWTClaimConditions>false</EnableJWTClaimConditions>
+        <EnableQueryParamConditions>false</EnableQueryParamConditions>
     </ThrottlingConfigurations>
 
     <SwaggerCodegen>
