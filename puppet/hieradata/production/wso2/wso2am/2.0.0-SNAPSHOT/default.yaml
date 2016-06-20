@@ -69,6 +69,8 @@ wso2::file_list :
   - repository/components/lib/jackson-core-2.5.4.jar
   - repository/components/lib/jackson-databind-2.5.4.jar
   - repository/components/lib/mysql-connector-java-5.1.36-bin.jar
+  - repository/resources/security/client-truststore.jks
+  - repository/resources/security/wso2carbon.jks
 
 wso2::clustering :
     enabled : false
