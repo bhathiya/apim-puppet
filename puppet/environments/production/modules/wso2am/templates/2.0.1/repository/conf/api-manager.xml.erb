@@ -50,11 +50,11 @@
 
         <!-- This parameter specifies which implementation should be used for generating the Token. JWTGenerator is the
 	     default implementation provided. -->
-        <JWTGeneratorImpl>org.wso2.carbon.apimgt.impl.token.JWTGenerator</JWTGeneratorImpl>
+        <JWTGeneratorImpl>org.wso2.carbon.apimgt.keymgt.token.JWTGenerator</JWTGeneratorImpl>
 
         <!-- This parameter specifies which implementation should be used for generating the Token. For URL safe JWT
              Token generation the implementation is provided in URLSafeJWTGenerator -->
-        <!--<JWTGeneratorImpl>org.wso2.carbon.apimgt.impl.token.URLSafeJWTGenerator</JWTGeneratorImpl>-->
+        <!--<JWTGeneratorImpl>org.wso2.carbon.apimgt.keymgt.token.URLSafeJWTGenerator</JWTGeneratorImpl>-->
 
         <!-- Remove UserName from JWT Token -->
         <!-- <RemoveUserNameFromJWTForApplicationToken>true</RemoveUserNameFromJWTForApplicationToken>-->
@@ -137,22 +137,19 @@
              Ex - Multiple Receiver Groups with two receivers each
              {tcp://localhost:7612/,tcp://localhost:7613},{tcp://localhost:7712/,tcp://localhost:7713/} -->
         <DASServerURL>{tcp://localhost:7612}</DASServerURL>
+        <!--DASAuthServerURL>{ssl://localhost:7712}</DASAuthServerURL-->
         <!-- Administrator username to login to the remote DAS server. -->
-        <DASUsername>admin</DASUsername>
+        <DASUsername>${admin.username}</DASUsername>
         <!-- Administrator password to login to the remote DAS server. -->
-        <DASPassword>admin</DASPassword>
+        <DASPassword>${admin.password}</DASPassword>
 
-        <!-- For APIM implemented Statistic client for DAS REST API -->
-        <!--StatsProviderImpl>org.wso2.carbon.apimgt.usage.client.impl.APIUsageStatisticsRestClientImpl</StatsProviderImpl-->
         <!-- For APIM implemented Statistic client for RDBMS -->
         <StatsProviderImpl>org.wso2.carbon.apimgt.usage.client.impl.APIUsageStatisticsRdbmsClientImpl</StatsProviderImpl>
 
-        <!-- DAS REST API configuration
-             Set the values if .'org.wso2.carbon.apimgt.usage.client.impl.APIUsageStatisticsRestClientImpl'
-             is used as Statistic Client -->
+        <!-- DAS REST API configuration -->
         <DASRestApiURL>https://localhost:9444</DASRestApiURL>
-        <DASRestApiUsername>admin</DASRestApiUsername>
-        <DASRestApiPassword>admin</DASRestApiPassword>
+        <DASRestApiUsername>${admin.username}</DASRestApiUsername>
+        <DASRestApiPassword>${admin.password}</DASRestApiPassword>
 
         <!-- Below property is used to skip trying to connect to event receiver nodes when publishing events even if
             the stats enabled flag is set to true. -->
@@ -425,6 +422,10 @@
                 <HTTPMethods>GET,HEAD</HTTPMethods>
             </WhiteListedURI>
             <WhiteListedURI>
+                <URI>/api/am/admin/{version}/swagger.json</URI>
+                <HTTPMethods>GET,HEAD</HTTPMethods>
+            </WhiteListedURI>
+            <WhiteListedURI>
                 <URI>/api/am/store/{version}/apis</URI>
                 <HTTPMethods>GET,HEAD</HTTPMethods>
             </WhiteListedURI>
@@ -446,6 +447,10 @@
             </WhiteListedURI>
             <WhiteListedURI>
                 <URI>/api/am/store/{version}/apis/{apiId}/documents/{documentId}/content</URI>
+                <HTTPMethods>GET,HEAD</HTTPMethods>
+            </WhiteListedURI>
+            <WhiteListedURI>
+                <URI>/api/am/store/{version}/apis/{apiId}/thumbnail</URI>
                 <HTTPMethods>GET,HEAD</HTTPMethods>
             </WhiteListedURI>
             <WhiteListedURI>
@@ -511,7 +516,14 @@
                 <JobQueueSize>10</JobQueueSize>
             </JMSTaskManager>
         </JMSConnectionDetails>
-        <JMSEventPublisherName>jmsEventPublisher</JMSEventPublisherName>
+        <JMSEventPublisherParameters>
+                <java.naming.factory.initial>org.wso2.andes.jndi.PropertiesFileInitialContextFactory</java.naming.factory.initial>
+                <java.naming.provider.url>repository/conf/jndi.properties</java.naming.provider.url>
+                <transport.jms.DestinationType>topic</transport.jms.DestinationType>
+                <transport.jms.Destination>throttleData</transport.jms.Destination>
+                <transport.jms.ConcurrentPublishers>allow</transport.jms.ConcurrentPublishers>
+                <transport.jms.ConnectionFactoryJNDIName>TopicConnectionFactory</transport.jms.ConnectionFactoryJNDIName>
+        </JMSEventPublisherParameters>
         <!--DefaultLimits>
             <SubscriptionTierLimits>
                 <Gold>5000</Gold>
@@ -536,12 +548,4 @@
         <EnableQueryParamConditions>false</EnableQueryParamConditions>
     </ThrottlingConfigurations>
 
-    <SwaggerCodegen>
-        <ClientGeneration>
-            <GroupId>org.wso2</GroupId>
-            <ArtifactId>org.wso2.client.</ArtifactId>
-            <ModelPackage>org.wso2.client.model.</ModelPackage>
-            <ApiPackage>org.wso2.client.api.</ApiPackage>
-        </ClientGeneration>
-    </SwaggerCodegen>
 </APIManager>

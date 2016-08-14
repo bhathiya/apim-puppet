@@ -15,17 +15,14 @@
   ~ KIND, either express or implied. See the License for the
   ~ specific language governing permissions and limitations
   ~ under the License.
-  -->
-
-<!-- This is the root configuration file of WSO2 Message Broker (MB). Links to configurations of 
+  --><!-- This is the root configuration file of WSO2 Message Broker (MB). Links to configurations of 
 associated libraries are also specified here. 
 
 [Note for developers] - If you intend to rename or modify a property name, remember to update 
 relevant, org.wso2.andes.configuration.enums.AndesConfiguration, enum value using the Xpath 
 expression of the property.
 
-This file is ciphertool compliant. Refer PRODUCT_HOME/repository/conf/security/cipher-text.properties for examples.-->
-<broker>
+This file is ciphertool compliant. Refer PRODUCT_HOME/repository/conf/security/cipher-text.properties for examples.--><broker>
 
     <coordination>
         <!-- You can override the cluster node identifier of this MB node using the nodeID. 
@@ -36,6 +33,7 @@ This file is ciphertool compliant. Refer PRODUCT_HOME/repository/conf/security/c
         <!-- Thrift is used to maintain and sync slot (message groups) ranges between MB nodes. -->
         <thriftServerHost><%= @clustering['local_member_host'] %></thriftServerHost>
         <thriftServerPort>7611</thriftServerPort>
+        <thriftSOTimeout>0</thriftSOTimeout>
         <!--Thrift server reconnect timeout. Value specified in SECONDS-->
         <thriftServerReconnectTimeout>5</thriftServerReconnectTimeout>
         <!-- Hazelcast reliable topics are used to share all notifications across the MB cluster (e.g. subscription
@@ -50,7 +48,7 @@ This file is ciphertool compliant. Refer PRODUCT_HOME/repository/conf/security/c
         <amqp enabled="true">
             <bindAddress><%= @clustering['local_member_host'] %></bindAddress>
 
-            <defaultConnection enabled="true" port="5672" />
+            <defaultConnection enabled="true" port="5672"/>
 
             <sslConnection enabled="true" port="8672">
                 <keyStore>
@@ -69,10 +67,10 @@ This file is ciphertool compliant. Refer PRODUCT_HOME/repository/conf/security/c
 
             <!-- Refer repository/conf/advanced/qpid-config.xml for further AMQP-specific configurations.-->
         </amqp>
-        <mqtt enabled="true">
+        <mqtt enabled="false">
             <bindAddress><%= @clustering['local_member_host'] %></bindAddress>
 
-            <defaultConnection enabled="true" port="1883" />
+            <defaultConnection enabled="true" port="1883"/>
 
             <sslConnection enabled="true" port="8883">
                 <keyStore>
@@ -244,16 +242,16 @@ This file is ciphertool compliant. Refer PRODUCT_HOME/repository/conf/security/c
                 ready to deliver before even the slot is entirely filled after specified time.
                 NOTE: specified in milliseconds.
             -->
-            <messageAccumulationTimeout>2000</messageAccumulationTimeout>
+            <messageAccumulationTimeout>50</messageAccumulationTimeout>
 
             <!--Rough estimate for size of a slot-->
-            <windowSize>1000</windowSize>
+            <windowSize>50</windowSize>
 
             <!-- Time interval which broker check for slots that can be marked as 'ready to deliver' 
                  (- slots which have a aged more than 'messageAccumulationTimeout')
                  NOTE: specified in milliseconds.
             -->
-            <timerPeriod>1000</timerPeriod>
+            <timerPeriod>40</timerPeriod>
 
             <!--Number of SlotDeliveryWorker threads that should be started-->
             <workerThreadCount>5</workerThreadCount>
@@ -425,6 +423,9 @@ This file is ciphertool compliant. Refer PRODUCT_HOME/repository/conf/security/c
         * NOTE : Increasing this value could cause delays when loading the message content page.-->
         <maximumMessageDisplayLength>100000</maximumMessageDisplayLength>
 
+        <!--Enable users to reroute all messages from a specific destination(queue or durable topic) to a specific
+        queue.-->
+        <allowReRouteAllInDLC>false</allowReRouteAllInDLC>
     </managementConsole>
 
     <!-- Memory and resource exhaustion is something we should prevent and recover from.
@@ -478,6 +479,39 @@ This file is ciphertool compliant. Refer PRODUCT_HOME/repository/conf/security/c
         <!-- Virtual host sync interval seconds in for the Virtual host syncing Task which will
             sync the Virtual host details across the cluster -->
         <vHostSyncTaskInterval>900</vHostSyncTaskInterval>
+        
+        <!--
+         Enables network partition detection ( and surrounding functionality, such
+         as disconnecting subscriptions, enabling error based flow control if the
+         minimal node count becomes less than configured value.
+        -->
+        <networkPartitionsDetection enabled="false">
+              
+               <!--
+                The minimum node count the cluster should maintain for this node to
+                operate. if cluster size becomes less that configured value
+                This node will not accept any incoming traffic ( and disconnect
+                subscriptions) etc.
+               -->
+              <minimumClusterSize>1</minimumClusterSize>
+        </networkPartitionsDetection>
+
     </recovery>
+
+    <!--
+        Specifies the deployment mode for the broker node (and cluster). Possible values {default, standalone}.
+
+        default - Broker node will decide to run HA (master/slave) or fully distributed mode. Decision is taken based
+                  on the node has a clustering mechanism enabled or not. If the node is not configured to join a cluster
+                  it will run in HA mode (refer to axis2.xml for more information). If the node can join a cluster it
+                  will start in fully clustered mode.
+
+        standalone - This is the simplest mode a broker can be started. Node will assume datastore is not shared with
+                     another node. Therefore it will not try to coordinate with other nodes (possibly non-existent) to
+                     provide HA or clustering.
+    -->
+    <deployment>
+        <mode>standalone</mode>
+    </deployment>
 
 </broker>
